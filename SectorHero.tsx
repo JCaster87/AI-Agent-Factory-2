@@ -9,8 +9,6 @@ type Props = {
   ctaHref?: string;
   brandName?: string;
   accentClass?: string; // e.g. 'from-indigo-500/10 to-indigo-200/40'
-  buttonClass?: string; // e.g. 'bg-indigo-600'
-  outlineClass?: string; // e.g. 'border-indigo-600 text-indigo-700'
 };
 
 export default function SectorHero({
@@ -21,9 +19,7 @@ export default function SectorHero({
   ctaText,
   ctaHref = '/pricing',
   brandName = 'AI Agent Factory',
-  accentClass = 'from-black/5 to-gray-200',
-  buttonClass = 'bg-black',
-  outlineClass = 'border-black text-black'
+  accentClass = 'from-black/5 to-gray-200'
 }: Props) {
   return (
     <main>
@@ -55,10 +51,10 @@ export default function SectorHero({
               ))}
             </ul>
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Link href={ctaHref} className={`inline-flex items-center justify-center rounded-xl px-5 py-3 text-white font-medium shadow hover:opacity-90 ${buttonClass}`}>
+              <Link href={ctaHref} className="inline-flex items-center justify-center rounded-xl bg-black px-5 py-3 text-white font-medium shadow hover:opacity-90">
                 {ctaText}
               </Link>
-              <Link href="/pricing" className={`inline-flex items-center justify-center rounded-xl border px-5 py-3 font-medium ${outlineClass}`}>
+              <Link href="/pricing" className="inline-flex items-center justify-center rounded-xl border px-5 py-3 font-medium">
                 See pricing
               </Link>
             </div>
@@ -74,7 +70,6 @@ export default function SectorHero({
                     <div className="h-9 rounded border bg-white p-2 text-gray-500">Template</div>
                     <div className="h-9 rounded border bg-white p-2 text-gray-500">Name</div>
                     <div className="h-9 rounded border bg-white p-2 text-gray-500">Frequency</div>
-
                   </div>
                   <div className="space-y-2">
                     <div className="h-9 rounded border bg-white p-2 text-gray-500">Tone</div>
@@ -82,7 +77,7 @@ export default function SectorHero({
                     <div className="h-9 rounded border bg-white p-2 text-gray-500">Lead count</div>
                   </div>
                 </div>
-                <div className={`mt-4 h-10 rounded-xl text-white text-sm flex items-center justify-center ${buttonClass}`}>Create Agent</div>
+                <div className="mt-4 h-10 rounded-xl bg-black text-white text-sm flex items-center justify-center">Create Agent</div>
               </div>
               <p className="mt-3 text-xs text-gray-500">Preview of the in‑app wizard</p>
             </div>
