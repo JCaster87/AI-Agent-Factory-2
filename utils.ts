@@ -1,7 +1,6 @@
 export function allowedAgentCount(tier?: string) {
-  switch ((tier || 'starter').toLowerCase()) {
-    case 'scale': return 15;
-    case 'pro': return 5;
-    default: return 1;
-  }
+  const t = (tier || 'starter').toLowerCase();
+  if (t === 'scale') return 15;
+  if (t === 'pro') return 5;
+  return 1;
 }
