@@ -1,19 +1,21 @@
-import Link from 'next/link';
+import SectorHero from '@/components/marketing/SectorHero';
+import PricingSection from '@/components/marketing/PricingSection';
 
-export default function Home() {
+export default function Page() {
   return (
-    <main className="mx-auto max-w-4xl p-8 space-y-8">
-      <h1 className="text-4xl font-bold">Hire a bot in 5 minutes.</h1>
-      <p className="text-lg text-gray-600">Automate outreach, reporting, and training without code.</p>
-      <div className="flex gap-3">
-        <Link href="/pricing" className="px-4 py-2 bg-black text-white rounded">Start Free</Link>
-        <a href="#how" className="px-4 py-2 border rounded">How it works</a>
-      </div>
-      <section id="how" className="grid md:grid-cols-3 gap-4 pt-8">
-        {['Pick a template','Customize','Get results daily/weekly'].map((t,i)=> (
-          <div key={i} className="border rounded p-4"><div className="font-semibold">{t}</div></div>
-        ))}
-      </section>
-    </main>
+    <>
+      <SectorHero
+        brandName="PromoPilot"
+        eyebrow="Built for marketers"
+        title="Marketing that runs itself."
+        subtitle="Launch campaigns, build leads, and deliver reports on autopilot — so you can focus on strategy, not spreadsheets."
+        bullets={[ "Weekly content calendars & campaign ideas generated instantly.", "Fresh lead lists and cold emails delivered to your inbox.", "Auto-built reports with insights your boss will love." ]}
+        ctaText="Start for $9.99"
+        accentClass="from-indigo-500/10 to-indigo-200/40"
+        buttonClass="bg-indigo-600"
+        outlineClass="border-indigo-600 text-indigo-700"
+      />
+      <PricingSection />
+    </>
   );
 }
