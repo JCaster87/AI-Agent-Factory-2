@@ -1,28 +1,41 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { agents, runs } from '@/lib/schema';
-import { and, lte, eq } from 'drizzle-orm';
-import { runAgentOnce } from '@/lib/runAgent';
-import { sendOutputEmail } from '@/lib/email';
+import { NextRequest, NextResponse } from 'next/server';
+import { stripe } from '@/lib/stripe';
+import { getUserId } from '@/lib/auth';
 
-export const runtime = 'nodejs';
+const planMap: Record<string, string | undefined> = {
+  basic: process.env.STRIPE_PRICE_BASIC,
+  pro: process.env.STRIPE_PRICE_PRO,
+  scale: process.env.STRIPE_PRICE_SCALE,
+};
 
-export async function GET() {
-  const now = new Date();
-  const dueAgents = await db.select().from(agents).where(and(eq(agents.isActive, true), lte(agents.nextRunAt, now))).limit(5);
-  for (const agent of dueAgents) {
-    const [run] = await db.insert(runs).values({ agentId: agent.id, userId: agent.userId, status: 'processing' }).returning();
-    try {
-      const result = await runAgentOnce(agent as any);
-      await db.update(runs).set({ status: 'succeeded', finishedAt: new Date(), outputSummary: result.summary, outputData: result.data }).where(eq(runs.id, run.id));
-      const emailTo = (agent as any).config?.emailFrom;
-      if (emailTo) await sendOutputEmail(emailTo, (agent as any).name, result);
-      const next = new Date();
-      if ((agent as any).frequency === 'daily') next.setDate(next.getDate() + 1); else next.setDate(next.getDate() + 7);
-      await db.update(agents).set({ lastRunAt: new Date(), nextRunAt: next }).where(eq(agents.id, agent.id));
-    } catch (e) {
-      await db.update(runs).set({ status: 'failed', finishedAt: new Date(), error: String(e) }).where(eq(runs.id, run.id));
-    }
+export async function POST(req: NextRequest) {
+  const userId = await getUserId();
+  if (!userId) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+
+  // Accept both JSON and form submissions
+  let plan = 'basic';
+  let sector = 'generic';
+  const contentType = req.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    const body = await req.json();
+    plan = (body.plan as string) || 'basic';
+    sector = (body.sector as string) || 'generic';
+  } else {
+    const form = await req.formData();
+    plan = (form.get('plan') as string) || 'basic';
+    sector = (form.get('sector') as string) || 'generic';
   }
-  return NextResponse.json({ ok: true, processed: dueAgents.length });
+
+  const price = planMap[plan] || process.env.STRIPE_PRICE_BASIC;
+  if (!price) return NextResponse.json({ error: 'price_not_configured' }, { status: 500 });
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    line_items: [{ price, quantity: 1 }],
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?status=cancel`,
+    subscription_data: { metadata: { userId, sector, plan } },
+  });
+
+  return NextResponse.json({ url: session.url });
 }

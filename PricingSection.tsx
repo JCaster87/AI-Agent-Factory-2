@@ -1,26 +1,26 @@
-import Link from 'next/link';
-
 type Tier = {
   name: string;
   price: string;
   blurb: string;
   features: string[];
-  priceEnv?: string; // optional: env key name for Stripe price id
+  planKey: 'basic' | 'pro' | 'scale';
 };
 
 export default function PricingSection({
   title = 'Simple pricing',
   subtitle = 'Start for just $9.99. Upgrade as you grow.',
   cta = 'Subscribe',
+  sector = 'generic',
   tiers = [
-    { name: 'Starter', price: '$9.99/mo', blurb: '1 agent • light usage', features: ['1 active agent', 'Email delivery', 'Basic support'], priceEnv: 'STRIPE_PRICE_BASIC' },
-    { name: 'Pro', price: '$29/mo', blurb: '5 agents • heavier usage', features: ['Up to 5 agents', 'Priority email', 'Downloads (CSV/JSON)'], priceEnv: 'STRIPE_PRICE_PRO' },
-    { name: 'Scale', price: '$79/mo', blurb: '15 agents • teams', features: ['Up to 15 agents', 'Priority support', 'Team seats (beta)'], priceEnv: 'STRIPE_PRICE_SCALE' },
+    { name: 'Starter', price: '$9.99/mo', blurb: '1 agent • light usage', features: ['1 active agent', 'Email delivery', 'Basic support'], planKey: 'basic' },
+    { name: 'Pro', price: '$29/mo', blurb: '5 agents • heavier usage', features: ['Up to 5 agents', 'Priority email', 'Downloads (CSV/JSON)'], planKey: 'pro' },
+    { name: 'Scale', price: '$79/mo', blurb: '15 agents • teams', features: ['Up to 15 agents', 'Priority support', 'Team seats (beta)'], planKey: 'scale' },
   ]
 }: {
   title?: string;
   subtitle?: string;
   cta?: string;
+  sector?: string;
   tiers?: Tier[];
 }) {
   return (
@@ -46,7 +46,8 @@ export default function PricingSection({
               </ul>
             </div>
             <form action="/api/stripe/checkout" method="post" className="mt-6">
-              {/* In a real app you might pass which price to use; for MVP checkout uses BASIC by default */}
+              <input type="hidden" name="plan" value={t.planKey} />
+              <input type="hidden" name="sector" value={sector} />
               <button className="w-full inline-flex items-center justify-center rounded-xl bg-black px-5 py-3 text-white font-medium shadow hover:opacity-90">
                 {cta}
               </button>

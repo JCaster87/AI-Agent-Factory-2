@@ -4,8 +4,9 @@ type Template = {
   blurb: string;
   sampleTitle?: string;
   sampleBody?: string;
-  sampleList?: string[]; // for CSV/JSON bullet preview
+  sampleList?: string[];
   badge?: string;
+  imageSrc?: string;
 };
 
 export default function TemplateGallery({
@@ -26,6 +27,11 @@ export default function TemplateGallery({
       <div className="mt-8 grid md:grid-cols-3 gap-6">
         {templates.map((t) => (
           <article key={t.key} className="rounded-2xl border bg-white shadow-sm overflow-hidden">
+            {t.imageSrc && (
+              <div className="bg-gray-100 p-3 border-b">
+                <img src={t.imageSrc} alt={t.name} className="w-full h-40 object-cover rounded-xl" />
+              </div>
+            )}
             <div className="p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
