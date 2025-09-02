@@ -1,6 +1,6 @@
-import SectorHero from '@/components/marketing/SectorHero';
-import TemplateGallery from '@/components/marketing/TemplateGallery';
-import PricingSection from '@/components/marketing/PricingSection';
+import SectorHero from '../../components/marketing/SectorHero';
+import TemplateGallery from '../../components/marketing/TemplateGallery';
+import PricingSection from '../../components/marketing/PricingSection';
 
 const templates = [
   { key: 'one', name: 'Starter Pack', blurb: 'Jumpstart tasks for Healthcare.', imageSrc: '/screens/healthcare_1.png', sampleTitle: 'Preview', sampleBody: 'Example content...' },
