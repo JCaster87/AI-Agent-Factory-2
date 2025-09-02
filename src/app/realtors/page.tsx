@@ -2,7 +2,6 @@ import SectorHero from '../../components/marketing/SectorHero';
 import TemplateGallery from '../../components/marketing/TemplateGallery';
 import PricingSection from '../../components/marketing/PricingSection';
 
-
 const templates = [
   { key: 'one', name: 'Starter Pack', blurb: 'Jumpstart tasks for Realtors.', imageSrc: '/screens/realtors_1.png', sampleTitle: 'Preview', sampleBody: 'Example content...' },
   { key: 'two', name: 'Lead Builder', blurb: 'Curate prospects with reasons.', imageSrc: '/screens/realtors_2.png', sampleTitle: 'Columns', sampleList: ['Name','Company','Email','Why good fit'] },
